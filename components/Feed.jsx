@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import PromptCard from './PromptCard'
 
+let allPosts = []
+
 const PromptCardList = ({ data, handleTagClick }) => {
 
   return (
@@ -23,13 +25,28 @@ const Feed = () => {
   const [posts, setPosts] = useState([])
  
   const handleSearchChange = (e) => {
-
+    console.log(posts)
+    // const filteredPosts = array.filter(item => item.toLowerCase().includes(searchTerm.toLowerCase()));
+    if (e.target.value.length === 0) { setPosts(allPosts) } 
+    else 
+    {const filteredPosts = posts.filter(post => 
+      post.prompt.toLowerCase().includes(e.target.value.toLowerCase()) ||
+      post.tag.toLowerCase().includes(e.target.value.toLowerCase()) ||
+      post.creator.userName.toLowerCase().includes(e.target.value.toLowerCase()) ||
+      post.creator.email.toLowerCase().includes(e.target.value.toLowerCase()) 
+      )  ;
+    setPosts(filteredPosts)
+    console.log(e.target.value.length)}
+    
   }
+
+
 
   useEffect(() => {
     const fetchPosts = async () => {
       const response = await fetch('/api/prompt')
       const data = await response.json()
+      allPosts = data
       setPosts(data)
     }
 
@@ -43,10 +60,11 @@ const Feed = () => {
         <input
           type="text"
           placeholder="search for a tag or a username"
-          value={searchText}
-          onGnage={handleSearchChange}
+          // value={searchText}
+          onChange={handleSearchChange}
           required
-          className="search_input peer" />
+          className="search_input peer" 
+          />
       </form>
 
       <PromptCardList
