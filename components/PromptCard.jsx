@@ -18,10 +18,18 @@ const handleCopy = () => {
   setTimeout(() => setCopied(""), 3000)
 }
 
+const handleProfile = () => {
+  console.log(post.creator)
+  router.push(`/other-profile?id=${post.creator._id}&username=${post.creator.userName}`)
+  
+  // router.push(`/other-profile?${post.creator._id}`)
+}
+
   return (
     <div className="prompt_card">
       <div className="flex justify-between items-start gap-5">
-        <div className="flex-1 flex justify-start items-center gap-3 cursor-pointer">
+        <div className="flex-1 flex justify-start items-center gap-3 cursor-pointer"
+        onClick={handleProfile}>
           <Image
             src={post.creator.image}
             alt="user_image"

@@ -23,24 +23,34 @@ const PromptCardList = ({ data, handleTagClick }) => {
 const Feed = () => {
   const [searchText, setSearchText] = useState("")
   const [posts, setPosts] = useState([])
- 
+
   const handleSearchChange = (e) => {
-    console.log(posts)
-    // const filteredPosts = array.filter(item => item.toLowerCase().includes(searchTerm.toLowerCase()));
-    if (e.target.value.length === 0) { setPosts(allPosts) } 
-    else 
-    {const filteredPosts = posts.filter(post => 
-      post.prompt.toLowerCase().includes(e.target.value.toLowerCase()) ||
-      post.tag.toLowerCase().includes(e.target.value.toLowerCase()) ||
-      post.creator.userName.toLowerCase().includes(e.target.value.toLowerCase()) ||
-      post.creator.email.toLowerCase().includes(e.target.value.toLowerCase()) 
-      )  ;
-    setPosts(filteredPosts)
-    console.log(e.target.value.length)}
-    
+
+    if (e.target.value.length < 2) { setPosts(allPosts) }
+    else {
+      const filteredPosts = posts.filter(post =>
+        post.prompt.toLowerCase().includes(e.target.value.toLowerCase()) ||
+        post.tag.toLowerCase().includes(e.target.value.toLowerCase()) ||
+        post.creator.userName.toLowerCase().includes(e.target.value.toLowerCase()) ||
+        post.creator.email.toLowerCase().includes(e.target.value.toLowerCase())
+      );
+      setPosts(filteredPosts)
+      console.log(e.target.value.length)
+      console.log(e.target.value)
+    }
+
   }
 
+  const handleTagClick = (e) => {
 
+
+    console.log(e)
+    const tagSelect = posts.filter(post => post.tag.toLowerCase().includes(e.toLowerCase()))
+    var inputElement = document.getElementById('searchString')
+    
+    inputElement.value = e
+    setPosts(tagSelect)
+  }
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -58,18 +68,19 @@ const Feed = () => {
     <section className="feed">
       <form className="relative w-full flex-center">
         <input
+          id="searchString"
           type="text"
           placeholder="search for a tag or a username"
           // value={searchText}
           onChange={handleSearchChange}
           required
-          className="search_input peer" 
-          />
+          className="search_input peer"
+        />
       </form>
 
       <PromptCardList
         data={posts}
-        handleTagClick={() => { }}
+        handleTagClick={handleTagClick}
       />
     </section>
   )
